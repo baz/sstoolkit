@@ -63,6 +63,7 @@ typedef enum {
 	id<SSCollectionViewDataSource> _dataSource;
 	
 	SSCollectionViewExtremitiesStyle _extremitiesStyle;
+	UITableViewRowAnimation _rowUpdateAnimation;
 	CGFloat _minimumColumnSpacing;
 	CGFloat _rowSpacing;
 	BOOL _allowsSelection;
@@ -92,6 +93,11 @@ typedef enum {
  `SSCollectionViewExtremitiesStyleFixed`.
  */
 @property (nonatomic, assign) SSCollectionViewExtremitiesStyle extremitiesStyle;
+
+/**
+ The animation to use when updating rows.
+ */
+@property (nonatomic, assign) UITableViewRowAnimation rowUpdateAnimation;
 
 /**
  The minimum column spacing.

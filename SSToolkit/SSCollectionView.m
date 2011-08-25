@@ -77,6 +77,7 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 @synthesize minimumColumnSpacing = _minimumColumnSpacing;
 @synthesize rowSpacing = _rowSpacing;
 @synthesize allowsSelection = _allowsSelection;
+@synthesize rowUpdateAnimation = _rowUpdateAnimation;
 
 - (UIScrollView *)scrollView {
 	return _tableView;
@@ -272,7 +273,7 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 			[rowIndexPaths addObject:rowIndexPath];
 		}
 	}];
-	[_tableView reloadRowsAtIndexPaths:rowIndexPaths withRowAnimation:UITableViewRowAnimationFade];	
+	[_tableView reloadRowsAtIndexPaths:rowIndexPaths withRowAnimation:_rowUpdateAnimation];	
 	[rowIndexPaths release];
 }
 
