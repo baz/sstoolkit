@@ -199,6 +199,17 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 }
 
 
+- (NSArray *)visibleItemsInSection:(NSUInteger)section {
+	__block NSMutableArray *items = [NSMutableArray arrayWithCapacity:0];
+	[_visibleItems enumerateObjectsUsingBlock:^(id object, BOOL *stop) {
+		if ([[(SSCollectionViewItem *)object indexPath] section] == section) {
+			[items addObject:object];
+		}
+	}];
+	return items;
+}
+
+
 - (SSCollectionViewItem *)itemPathForIndex:(NSIndexPath *)indexPath {
 	__block SSCollectionViewItem *item = nil;
 	[_visibleItems enumerateObjectsUsingBlock:^(id object, BOOL *stop) {

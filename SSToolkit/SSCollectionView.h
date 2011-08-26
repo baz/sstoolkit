@@ -154,6 +154,17 @@ typedef enum {
 - (SSCollectionViewItem *)dequeueReusableItemWithIdentifier:(NSString *)identifier;
 
 /**
+ Returns visible collection view items for the specified section.
+ 
+ @param section The section in which you wish to have the items retrieved from.
+ 
+ @return An array containing all visible items from the specified section.
+ 
+ @see itemPathForIndex:
+ */
+- (NSArray *)visibleItemsInSection:(NSUInteger)section;
+
+/**
  Returns the collection view item at the specified index path.
  
  @param indexPath The index path locating the item in the receiver.
