@@ -60,9 +60,12 @@
 	[_items enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
 		SSCollectionViewItem *item = (SSCollectionViewItem *)object;
 		
-		item.frame = CGRectMake(xOrigin + x, 0.0f, _itemSize.width, _itemSize.height);
+		item.frame = CGRectIntegral(CGRectMake(xOrigin + x, 0.0f, _itemSize.width, _itemSize.height));
+
 		x += _itemSize.width + _itemSpacing;
 	}];
+
+	self.frame = CGRectIntegral(self.frame);
 }
 
 
