@@ -280,6 +280,7 @@ typedef enum {
 @optional
 
 - (NSUInteger)numberOfSectionsInCollectionView:(SSCollectionView *)aCollectionView;
+- (NSString *)collectionView:(SSCollectionView *)aCollectionView titleForHeaderInSection:(NSInteger)section;
 
 @end
 

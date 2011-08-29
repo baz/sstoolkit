@@ -597,6 +597,14 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 }
 
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	if ([_dataSource respondsToSelector:@selector(collectionView:titleForHeaderInSection:)]) {
+		return [_dataSource collectionView:self titleForHeaderInSection:section];
+	}
+	return nil;
+}
+
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)rowIndexPath {
