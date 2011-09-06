@@ -78,6 +78,7 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 @synthesize rowSpacing = _rowSpacing;
 @synthesize allowsSelection = _allowsSelection;
 @synthesize rowUpdateAnimation = _rowUpdateAnimation;
+@synthesize visibleItems = _visibleItems;
 
 - (UIScrollView *)scrollView {
 	return _tableView;

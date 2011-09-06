@@ -139,6 +139,11 @@ typedef enum {
 @property (nonatomic, assign, readonly) NSUInteger numberOfSections;
 
 /**
+ All visible items.
+ */
+@property (nonatomic, assign, readonly) NSSet *visibleItems;
+
+/**
  Reloads the items and sections of the receiver.
  */
 - (void)reloadData;
