@@ -151,7 +151,7 @@ typedef enum {
 /**
  Reloads the specified section of the receiver.
  */
-- (void)reloadSection:(NSUInteger)section;
+- (void)reloadSection:(NSInteger)section;
 
 /**
  Returns a reusable collection view item object located by its identifier.

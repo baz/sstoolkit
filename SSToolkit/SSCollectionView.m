@@ -182,10 +182,12 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 }
 
 
-- (void)reloadSection:(NSUInteger)section {
-	NSNumber *sectionKey = [NSNumber numberWithUnsignedInteger:section];
-	[_sectionCache removeObjectForKey:sectionKey];
-	[_tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
+- (void)reloadSection:(NSInteger)section {
+	if ([_tableView numberOfSections] > section) {
+		NSNumber *sectionKey = [NSNumber numberWithUnsignedInteger:section];
+		[_sectionCache removeObjectForKey:sectionKey];
+		[_tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
+	}
 }
 
 
