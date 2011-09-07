@@ -149,6 +149,11 @@ typedef enum {
 - (void)reloadData;
 
 /**
+ Reloads the specified section of the receiver.
+ */
+- (void)reloadSection:(NSUInteger)section;
+
+/**
  Returns a reusable collection view item object located by its identifier.
  
  @param identifier A string identifying the cell object to be reused.
