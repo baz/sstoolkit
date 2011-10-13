@@ -85,6 +85,11 @@ typedef enum {
 @property (nonatomic, assign) id<SSCollectionViewDelegate> delegate;
 
 /**
+ The internal table view.
+ */
+@property (nonatomic, retain, readonly) UITableView *tableView;
+
+/**
  The style of the receiving collection view's headers and footers.
  
  Setting to `SSCollectionViewExtremitiesStyleFixed` will cause the headers and footer to behave like a `UITableView`

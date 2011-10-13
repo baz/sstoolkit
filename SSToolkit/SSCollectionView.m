@@ -74,6 +74,7 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 }
 
 
+@synthesize tableView = _tableView;
 @synthesize minimumColumnSpacing = _minimumColumnSpacing;
 @synthesize rowSpacing = _rowSpacing;
 @synthesize allowsSelection = _allowsSelection;
