@@ -7,10 +7,19 @@
 //
 
 #import "NSArray+SSToolkitAdditions.h"
+#import "NSData+SSToolkitAdditions.h"
+
+@interface NSArray (SSToolkitPrivateAdditions)
+- (NSData *)_prehashData;
+@end
 
 @implementation NSArray (SSToolkitAdditions)
 
 - (id)firstObject {
+	if ([self count] == 0) {
+	    return nil;
+	}
+	
 	return [self objectAtIndex:0];
 }
 
@@ -34,6 +43,30 @@
 	
 	[copy release];
 	return array;
+}
+
+
+- (NSMutableArray *)deepMutableCopy {
+	return (NSMutableArray *)CFPropertyListCreateDeepCopy(kCFAllocatorDefault, (CFArrayRef)self, kCFPropertyListMutableContainers);
+}
+
+
+- (NSString *)MD5Sum {
+	return [[self _prehashData] MD5Sum];
+}
+
+
+- (NSString *)SHA1Sum {
+	return [[self _prehashData] SHA1Sum];
+}
+
+@end
+
+
+@implementation NSArray (SSToolkitPrivateAdditions)
+
+- (NSData *)_prehashData {
+	return [NSPropertyListSerialization dataWithPropertyList:self format:NSPropertyListBinaryFormat_v1_0 options:0 error:nil];
 }
 
 @end

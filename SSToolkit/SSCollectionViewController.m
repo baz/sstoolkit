@@ -9,6 +9,10 @@
 #import "SSCollectionViewController.h"
 #import "SSDrawingUtilities.h"
 
+@interface SSCollectionViewController ()
+- (void)_initialize;
+@end
+
 @implementation SSCollectionViewController
 
 #pragma mark - Accessors
@@ -17,6 +21,14 @@
 
 
 #pragma mark - NSObject
+
+- (id)init {
+	if ((self = [super init])) {
+		[self _initialize];
+	}
+	return self;
+}
+
 
 - (void)dealloc {
 	_collectionView.dataSource = nil;
@@ -28,12 +40,17 @@
 
 #pragma mark - UIViewController
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	if ((self = [super initWithCoder:aDecoder])) {
+		[self _initialize];
+	}
+	return self;
+}
+
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
-		_collectionView = [[SSCollectionView alloc] initWithFrame:CGRectZero];
-		_collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_collectionView.dataSource = self;
-		_collectionView.delegate = self;
+		[self _initialize];
 	}
 	return self;
 }
@@ -48,6 +65,18 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	[_collectionView.scrollView flashScrollIndicators];
+}
+
+#pragma mark - Private
+
+- (void)_initialize {
+    if ( ! _collectionView )
+    {
+        _collectionView = [[SSCollectionView alloc] initWithFrame:CGRectZero];
+        _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _collectionView.dataSource = self;
+        _collectionView.delegate = self;
+    }
 }
 
 
@@ -66,7 +95,7 @@
 #pragma mark - SSCollectionViewDelegate
 
 - (CGSize)collectionView:(SSCollectionView *)aCollectionView itemSizeForSection:(NSUInteger)section {
-	return CGSizeZero;
+	return CGSizeMake(50.0f, 50.0f);
 }
 
 @end

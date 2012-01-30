@@ -32,19 +32,7 @@ typedef enum {
  more flexible resizing.
  */
 
-@interface SSBadgeView : UIView {
-
-@private
-	
-	SSLabel *_textLabel;
-	UIColor *_badgeColor;
-	UIColor *_highlightedBadgeColor;
-	UIImage *_badgeImage;
-	UIImage *_highlightedBadgeImage;
-	CGFloat _cornerRadius;
-	SSBadgeViewAlignment _badgeAlignment;
-	BOOL _highlighted;
-}
+@interface SSBadgeView : UIView
 
 ///--------------------------------
 /// @name Accessing the Badge Label
@@ -54,6 +42,7 @@ typedef enum {
  The badge text label.
  */
 @property (nonatomic, retain, readonly) SSLabel *textLabel;
+
 
 ///-------------------------------------
 /// @name Accessing the Badge Attributes
@@ -100,6 +89,7 @@ typedef enum {
  */
 @property (nonatomic, assign, getter=isHighlighted) BOOL highlighted;
 
+
 ///---------------------
 /// @name Drawing Images
 ///---------------------
@@ -121,6 +111,7 @@ typedef enum {
  Setting a strechable image for this property is recommended.
  */
 @property (nonatomic, retain) UIImage *highlightedBadgeImage;
+
 
 ///---------------
 /// @name Defaults

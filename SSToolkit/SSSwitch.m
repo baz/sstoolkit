@@ -9,25 +9,48 @@
 #import "SSSwitch.h"
 #import "UIImage+SSToolkitAdditions.h"
 
-@interface SSSwitch (PrivateMethods)
+@interface SSSwitch ()
+- (void)_initialize;
 - (void)_layoutSubviewsWithHandlePosition:(CGFloat)x;
 - (void)_handleReleased:(id)sender;
 - (void)_handleDragged:(id)sender event:(UIEvent *)event;
 - (void)_handleDraggingEnded:(id)sender;
 @end
 
-@implementation SSSwitch
+@implementation SSSwitch {
+	UIView *_labelMaskView;
+	BOOL _dragging;
+	CGFloat _dragOffset;
+	NSInteger _hitCount;
+}
+
 
 #pragma mark - Accessors
 
 @synthesize on = _on;
+@synthesize style = _style;
+@synthesize handle = _handle;
+@synthesize leftHandleImage = _leftHandleImage;
+@synthesize leftHandleImageHighlighted = _leftHandleImageHighlighted;
+@synthesize centerHandleImage = _centerHandleImage;
+@synthesize centerHandleImageHighlighted = _centerHandleImageHighlighted;
+@synthesize rightHandleImage = _rightHandleImage;
+@synthesize rightHandleImageHighlighted = _rightHandleImageHighlighted;
+@synthesize handleWidth = _handleWidth;
+@synthesize handleShadowWidth = _handleShadowWidth;
+@synthesize onBackgroundImageView = _onBackgroundImageView;
+@synthesize onLabel = _onLabel;
+@synthesize onView = _onView;
+@synthesize offBackgroundImageView = _offBackgroundImageView;
+@synthesize offLabel = _offLabel;
+@synthesize offView = _offView;
+@synthesize trackEdgeInsets = _trackEdgeInsets;
+@synthesize switchLabelStyle = _switchLabelStyle;
 
 - (void)setOn:(BOOL)on {
 	[self setOn:on animated:NO];
 }
 
-
-@synthesize style = _style;
 
 - (void)setStyle:(SSSwitchStyle)s {
 	_style = s;
@@ -76,69 +99,59 @@
 }
 
 
-@synthesize handle = _handle;
-
-@synthesize leftHandleImage = _leftHandleImage;
-
 - (void)setLeftHandleImage:(UIImage *)leftHandleImage {
+	[leftHandleImage retain];
 	[_leftHandleImage release];
-	_leftHandleImage = [leftHandleImage retain];
+	_leftHandleImage = leftHandleImage;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize leftHandleImageHighlighted = _leftHandleImageHighlighted;
 
 - (void)setLeftHandleImageHighlighted:(UIImage *)leftHandleImageHighlighted {
+	[leftHandleImageHighlighted retain];
 	[_leftHandleImageHighlighted release];
-	_leftHandleImageHighlighted = [leftHandleImageHighlighted retain];
+	_leftHandleImageHighlighted = leftHandleImageHighlighted;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize centerHandleImage = _centerHandleImage;
 
 - (void)setCenterHandleImage:(UIImage *)centerHandleImage {
+	[centerHandleImage retain];
 	[_centerHandleImage release];
-	_centerHandleImage = [centerHandleImage retain];
+	_centerHandleImage = centerHandleImage;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize centerHandleImageHighlighted = _centerHandleImageHighlighted;
 
 - (void)setCenterHandleImageHighlighted:(UIImage *)centerHandleImageHighlighted {
+	[centerHandleImageHighlighted retain];
 	[_centerHandleImageHighlighted release];
-	_centerHandleImageHighlighted = [centerHandleImageHighlighted retain];
+	_centerHandleImageHighlighted = centerHandleImageHighlighted;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize rightHandleImage = _rightHandleImage;
 
 - (void)setRightHandleImage:(UIImage *)rightHandleImage {
+	[rightHandleImage retain];
 	[_rightHandleImage release];
-	_rightHandleImage = [rightHandleImage retain];
+	_rightHandleImage = rightHandleImage;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize rightHandleImageHighlighted = _rightHandleImageHighlighted;
 
 - (void)setRightHandleImageHighlighted:(UIImage *)rightHandleImageHighlighted {
+	[rightHandleImageHighlighted retain];
 	[_rightHandleImageHighlighted release];
-	_rightHandleImageHighlighted = [rightHandleImageHighlighted retain];
+	_rightHandleImageHighlighted = rightHandleImageHighlighted;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize handleWidth = _handleWidth;
 
 - (void)setHandleWidth:(CGFloat)handleWidth {
 	_handleWidth = handleWidth;
@@ -147,8 +160,6 @@
 }
 
 
-@synthesize handleShadowWidth = _handleShadowWidth;
-
 - (void)setHandleShadowWidth:(CGFloat)handleShadowWidth {
 	_handleShadowWidth = handleShadowWidth;
 	
@@ -156,23 +167,12 @@
 }
 
 
-@synthesize onBackgroundImageView = _onBackgroundImageView;
-@synthesize onLabel = _onLabel;
-@synthesize onView = _onView;
-@synthesize offBackgroundImageView = _offBackgroundImageView;
-@synthesize offLabel = _offLabel;
-@synthesize offView = _offView;
-
-@synthesize trackEdgeInsets = _trackEdgeInsets;
-
 - (void)setTrackEdgeInsets:(UIEdgeInsets)trackEdgeInsets {
 	_trackEdgeInsets = trackEdgeInsets;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize switchLabelStyle = _switchLabelStyle;
 
 - (void)setSwitchLabelStyle:(SSSwitchLabelStyle)switchLabelStyle {
 	_switchLabelStyle = switchLabelStyle;
@@ -204,58 +204,17 @@
 
 #pragma mark - UIView
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	if ((self = [super initWithCoder:aDecoder])) {
+		[self _initialize];
+	}
+	return self;
+}
+
+
 - (id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		self.backgroundColor = [UIColor clearColor];
-		self.clipsToBounds = YES;
-		self.autoresizesSubviews = NO; // TODO: Possibly remove
-		
-		// On background
-		_onBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-		_onBackgroundImageView.autoresizesSubviews = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_onBackgroundImageView.clipsToBounds = YES;
-		[self addSubview:_onBackgroundImageView];
-		
-		// Off background
-		_offBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-		_offBackgroundImageView.autoresizesSubviews = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_offBackgroundImageView.clipsToBounds = YES;
-		[self addSubview:_offBackgroundImageView];
-		
-		// Label mask
-		_labelMaskView = [[UIView alloc] initWithFrame:CGRectZero];
-		_labelMaskView.backgroundColor = [UIColor clearColor];
-		_labelMaskView.autoresizesSubviews = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_labelMaskView.clipsToBounds = YES;
-		[self addSubview:_labelMaskView];
-		
-		// On label
-		_onLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-		_onLabel.backgroundColor = [UIColor clearColor];
-		_onLabel.text = @"ON";
-		_onLabel.textAlignment = UITextAlignmentCenter;
-		[_labelMaskView addSubview:_onLabel];
-		
-		// Off label
-		_offLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-		_offLabel.backgroundColor = [UIColor clearColor];
-		_offLabel.text = @"OFF";
-		_offLabel.textAlignment = UITextAlignmentCenter;
-		[_labelMaskView addSubview:_offLabel];
-		
-		// Handle
-		_handle = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		[_handle addTarget:self action:@selector(_handleReleased:) forControlEvents:UIControlEventTouchUpInside];
-		[_handle addTarget:self action:@selector(_handleDragged:event:) forControlEvents:UIControlEventTouchDragInside];
-		[_handle addTarget:self action:@selector(_handleDraggingEnded:) forControlEvents:UIControlEventTouchUpOutside];
-		[self addSubview:_handle];
-		
-		// Defaults
-		_dragging = NO;
-		_hitCount = 0;
-		_switchLabelStyle = SSSwitchLabelStyleDefault;
-		_on = NO;
-		self.style = SSSwitchStyleDefault;
+		[self _initialize];
 	}
 	return self;
 }
@@ -299,7 +258,61 @@
 }
 
 
-#pragma mark - Private Methods
+#pragma mark - Private
+
+- (void)_initialize {
+	self.backgroundColor = [UIColor clearColor];
+	self.clipsToBounds = YES;
+	self.autoresizesSubviews = NO; // TODO: Possibly remove
+	
+	// On background
+	_onBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+	_onBackgroundImageView.autoresizesSubviews = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	_onBackgroundImageView.clipsToBounds = YES;
+	[self addSubview:_onBackgroundImageView];
+	
+	// Off background
+	_offBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+	_offBackgroundImageView.autoresizesSubviews = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	_offBackgroundImageView.clipsToBounds = YES;
+	[self addSubview:_offBackgroundImageView];
+	
+	// Label mask
+	_labelMaskView = [[UIView alloc] initWithFrame:CGRectZero];
+	_labelMaskView.backgroundColor = [UIColor clearColor];
+	_labelMaskView.autoresizesSubviews = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	_labelMaskView.clipsToBounds = YES;
+	[self addSubview:_labelMaskView];
+	
+	// On label
+	_onLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	_onLabel.backgroundColor = [UIColor clearColor];
+	_onLabel.text = @"ON";
+	_onLabel.textAlignment = UITextAlignmentCenter;
+	[_labelMaskView addSubview:_onLabel];
+	
+	// Off label
+	_offLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	_offLabel.backgroundColor = [UIColor clearColor];
+	_offLabel.text = @"OFF";
+	_offLabel.textAlignment = UITextAlignmentCenter;
+	[_labelMaskView addSubview:_offLabel];
+	
+	// Handle
+	_handle = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	[_handle addTarget:self action:@selector(_handleReleased:) forControlEvents:UIControlEventTouchUpInside];
+	[_handle addTarget:self action:@selector(_handleDragged:event:) forControlEvents:UIControlEventTouchDragInside];
+	[_handle addTarget:self action:@selector(_handleDraggingEnded:) forControlEvents:UIControlEventTouchUpOutside];
+	[self addSubview:_handle];
+	
+	// Defaults
+	_dragging = NO;
+	_hitCount = 0;
+	_switchLabelStyle = SSSwitchLabelStyleDefault;
+	_on = NO;
+	self.style = SSSwitchStyleDefault;
+}
+
 
 - (void)_layoutSubviewsWithHandlePosition:(CGFloat)x {	
 	CGFloat width = self.frame.size.width;

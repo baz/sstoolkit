@@ -11,19 +11,25 @@
 
 CGFloat const kAngleOffset = -90.0f;
 
+@interface SSPieProgressView ()
+- (void)_initialize;
+@end
+
 @implementation SSPieProgressView
 
 #pragma mark - Accessors
 
 @synthesize progress = _progress;
+@synthesize pieBorderWidth = _pieBorderWidth;
+@synthesize pieBorderColor = _pieBorderColor;
+@synthesize pieFillColor = _pieFillColor;
+@synthesize pieBackgroundColor = _pieBackgroundColor;
 
 - (void)setProgress:(CGFloat)newProgress {
 	_progress = fmaxf(0.0f, fminf(1.0f, newProgress));
 	[self setNeedsDisplay];
 }
 
-
-@synthesize pieBorderWidth = _pieBorderWidth;
 
 - (void)setPieBorderWidth:(CGFloat)pieBorderWidth {
 	_pieBorderWidth = pieBorderWidth;
@@ -32,31 +38,27 @@ CGFloat const kAngleOffset = -90.0f;
 }
 
 
-@synthesize pieBorderColor = _pieBorderColor;
-
 - (void)setPieBorderColor:(UIColor *)pieBorderColor {
+	[pieBorderColor retain];
 	[_pieBorderColor release];
-	_pieBorderColor = [pieBorderColor retain];
+	_pieBorderColor = pieBorderColor;
 	
 	[self setNeedsDisplay];
 }
-
-
-@synthesize pieFillColor = _pieFillColor;
 
 - (void)setPieFillColor:(UIColor *)pieFillColor {
+	[pieFillColor retain];
 	[_pieFillColor release];
-	_pieFillColor = [pieFillColor retain];
+	_pieFillColor = pieFillColor;
 	
 	[self setNeedsDisplay];
 }
 
 
-@synthesize pieBackgroundColor = _pieBackgroundColor;
-
 - (void)setPieBackgroundColor:(UIColor *)pieBackgroundColor {
+	[pieBackgroundColor retain];
 	[_pieBackgroundColor release];
-	_pieBackgroundColor = [pieBackgroundColor retain];
+	_pieBackgroundColor = pieBackgroundColor;
 	
 	[self setNeedsDisplay];
 }
@@ -81,15 +83,17 @@ CGFloat const kAngleOffset = -90.0f;
 
 #pragma mark - UIView
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if ((self = [super initWithCoder:aDecoder])) {
+		[self _initialize];
+    }
+    return self;
+}
+
+
 - (id)initWithFrame:(CGRect)aFrame {
     if ((self = [super initWithFrame:aFrame])) {
-		self.backgroundColor = [UIColor clearColor];
-		
-		self.progress = 0.0f;
-		self.pieBorderWidth = 2.0f;
-		self.pieBorderColor = [[self class] defaultPieColor];
-		self.pieFillColor = self.pieBorderColor;
-		self.pieBackgroundColor = [UIColor whiteColor];
+		[self _initialize];
     }
     return self;
 }
@@ -124,6 +128,19 @@ CGFloat const kAngleOffset = -90.0f;
 	CGContextSetLineWidth(context, _pieBorderWidth);
 	CGRect pieInnerRect = CGRectMake(_pieBorderWidth / 2.0f, _pieBorderWidth / 2.0f, rect.size.width - _pieBorderWidth, rect.size.height - _pieBorderWidth);
 	CGContextStrokeEllipseInRect(context, pieInnerRect);	
+}
+
+
+#pragma mark - Private
+
+- (void)_initialize {
+	self.backgroundColor = [UIColor clearColor];
+	
+	self.progress = 0.0f;
+	self.pieBorderWidth = 2.0f;
+	self.pieBorderColor = [[self class] defaultPieColor];
+	self.pieFillColor = self.pieBorderColor;
+	self.pieBackgroundColor = [UIColor whiteColor];
 }
 
 @end

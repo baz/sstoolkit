@@ -6,7 +6,7 @@
 //  Copyright 2009-2011 Sam Soffes. All rights reserved.
 //
 
-#import "SSBordererView.h"
+#import "SSBorderedView.h"
 
 /**
  The direction the gradient.
@@ -22,20 +22,11 @@ typedef enum {
 /**
  Simple `UIView` wrapper for `CGGradient`.
  */
-@interface SSGradientView : SSBordererView {
-	
-@private
-	
-	NSArray *_colors;
-	NSArray *_locations;
-	SSGradientViewDirection _direction;
-
-	CGGradientRef _gradient;
-}
+@interface SSGradientView : SSBorderedView
 
 ///---------------------------
 /// @name Drawing the Gradient
-///-------------------------
+///---------------------------
 
 /**
  An array of `UIColor` objects used to draw the gradient. If the value is `nil`, the `backgroundColor` will be drawn
@@ -56,9 +47,10 @@ typedef enum {
 /**
  The direction of the gradient.
  
- The default is `SSGradientViewDirectionHorizontal`.
+ The default is `SSGradientViewDirectionVertical`.
  */
 @property (nonatomic, assign) SSGradientViewDirection direction;
+
 
 ///-------------------------
 /// @name Deprecated Methods

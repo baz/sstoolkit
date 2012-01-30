@@ -14,12 +14,11 @@
 // Views
 #import "SSAnimatedImageView.h"
 #import "SSBadgeView.h"
-#import "SSBordererView.h"
+#import "SSBorderedView.h"
 #import "SSCollectionView.h"
 #import "SSCollectionViewItem.h"
 #import "SSGradientView.h"
 #import "SSHUDView.h"
-#import "SSIndicatorLabel.h"
 #import "SSLabel.h"
 #import "SSLineView.h"
 #import "SSLoadingView.h"
@@ -55,12 +54,11 @@
 // Views
 #import <SSToolkit/SSAnimatedImageView.h>
 #import <SSToolkit/SSBadgeView.h>
-#import <SSToolkit/SSBordererView.h>
+#import <SSToolkit/SSBorderedView.h>
 #import <SSToolkit/SSCollectionView.h>
 #import <SSToolkit/SSCollectionViewItem.h>
 #import <SSToolkit/SSGradientView.h>
 #import <SSToolkit/SSHUDView.h>
-#import <SSToolkit/SSIndicatorLabel.h>
 #import <SSToolkit/SSLabel.h>
 #import <SSToolkit/SSLineView.h>
 #import <SSToolkit/SSLoadingView.h>
@@ -68,7 +66,7 @@
 #import <SSToolkit/SSWebView.h>
 
 // Cells
-#import <SSToolkit/SSBadgeTableViewCell.h>b
+#import <SSToolkit/SSBadgeTableViewCell.h>
 
 // Controls
 #import <SSToolkit/SSAddressBarTextField.h>

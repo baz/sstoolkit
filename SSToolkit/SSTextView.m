@@ -8,13 +8,17 @@
 
 #import "SSTextView.h"
 
-@interface SSTextView (PrivateMethods)
+@interface SSTextView ()
+- (void)_initialize;
 - (void)_updateShouldDrawPlaceholder;
 - (void)_textChanged:(NSNotification *)notification;
 @end
 
 
-@implementation SSTextView
+@implementation SSTextView {
+	BOOL _shouldDrawPlaceholder;
+}
+
 
 #pragma mark - Accessors
 
@@ -52,12 +56,17 @@
 
 #pragma mark - UIView
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	if ((self = [super initWithCoder:aDecoder])) {
+		[self _initialize];
+	}
+	return self;
+}
+
+
 - (id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textChanged:) name:UITextViewTextDidChangeNotification object:self];
-		
-		self.placeholderColor = [UIColor colorWithWhite:0.702f alpha:1.0f];
-		_shouldDrawPlaceholder = NO;
+		[self _initialize];
 	}
 	return self;
 }
@@ -73,7 +82,15 @@
 }
 
 
-#pragma mark - Private Methods
+#pragma mark - Private
+
+- (void)_initialize {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textChanged:) name:UITextViewTextDidChangeNotification object:self];
+	
+	self.placeholderColor = [UIColor colorWithWhite:0.702f alpha:1.0f];
+	_shouldDrawPlaceholder = NO;
+}
+
 
 - (void)_updateShouldDrawPlaceholder {
 	BOOL prev = _shouldDrawPlaceholder;

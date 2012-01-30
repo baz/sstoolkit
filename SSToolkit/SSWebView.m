@@ -10,13 +10,19 @@
 #import "NSString+SSToolkitAdditions.h"
 
 @interface SSWebView (PrivateMethods)
+- (void)_initialize;
 - (void)_loadingStatusChanged;
 - (void)_startLoading;
 - (void)_finishedLoading;
 - (void)_DOMLoaded;
 @end
 
-@implementation SSWebView
+@implementation SSWebView {
+	UIWebView *_webView;
+	NSUInteger _requestCount;
+	BOOL _testedDOM;
+}
+
 
 #pragma mark - Accessors
 
@@ -40,13 +46,17 @@
 
 #pragma mark - UIView
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	if ((self = [super initWithCoder:aDecoder])) {
+		[self _initialize];
+	}
+	return self;
+}
+
+
 - (id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[self reset];
-
-		_loadingPage = NO;
-		_shadowsHidden = NO;
-		_consoleEnabled = NO;
+		[self _initialize];
 	}
 	return self;
 }
@@ -135,6 +145,15 @@
 
 
 #pragma mark - Private Methods
+
+- (void)_initialize {
+	[self reset];
+	
+	_loadingPage = NO;
+	_shadowsHidden = NO;
+	_consoleEnabled = NO;
+}
+
 
 - (void)_loadingStatusChanged {
 	if (self.loading == NO) {

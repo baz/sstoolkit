@@ -9,16 +9,7 @@
 /**
  Pie chart style progress pie chart similar to the one in Xcode 3's status bar.
  */
-@interface SSPieProgressView : UIView {
-
-@private
-	
-	CGFloat _progress;
-	CGFloat _pieBorderWidth;
-	UIColor *_pieBorderColor;
-	UIColor *_pieFillColor;
-	UIColor *_pieBackgroundColor;
-}
+@interface SSPieProgressView : UIView
 
 ///---------------------------
 ///@name Managing the Progress
@@ -65,6 +56,7 @@
  The default is white.
  */
 @property (nonatomic, retain) UIColor *pieBackgroundColor;
+
 
 ///---------------
 /// @name Defaults

@@ -13,15 +13,7 @@
  
  The inset is drawn under the line if `insetColor` is not `nil`.
  */
-@interface SSLineView : UIView {
-
-@private
-	
-	UIColor *_lineColor;
-	UIColor *_insetColor;
-	CGFloat _dashPhase;
-	NSArray *_dashLengths;
-}
+@interface SSLineView : UIView
 
 ///--------------------
 /// @name Drawing Lines
@@ -40,6 +32,7 @@
  The default is 50% opaque white.
  */
 @property (nonatomic, retain) UIColor *insetColor;
+
 
 ///---------------------
 /// @name Drawing Dashes

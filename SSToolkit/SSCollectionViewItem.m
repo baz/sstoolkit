@@ -13,7 +13,12 @@
 #import "SSLabel.h"
 #import "SSDrawingUtilities.h"
 
-@implementation SSCollectionViewItem
+@implementation SSCollectionViewItem {
+	SSCollectionViewItemStyle _style;
+	SSCollectionView *_collectionView;
+	NSIndexPath *_indexPath;
+}
+
 
 #pragma mark - Accessors
 
@@ -27,6 +32,35 @@
 @synthesize highlighted = _highlighted;
 @synthesize indexPath = _indexPath;
 @synthesize collectionView = _collectionView;
+
+- (void)setBackgroundView:(UIView *)backgroundView {
+	[backgroundView retain];
+	[_backgroundView release];
+	_backgroundView = backgroundView;
+	
+	_backgroundView.hidden = _selected && _selectedBackgroundView;
+	
+	[self insertSubview:backgroundView atIndex:0];
+	[self setNeedsLayout];
+}
+
+
+- (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView {
+	[selectedBackgroundView retain];
+	[_selectedBackgroundView release];
+	_selectedBackgroundView = selectedBackgroundView;
+	
+	_selectedBackgroundView.hidden = !_selected;
+	
+	if (_backgroundView) {
+		[self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
+	} else {
+		[self insertSubview:_selectedBackgroundView atIndex:0];
+	}
+	
+	[self setNeedsLayout];
+}
+
 
 #pragma mark - NSObject
 
@@ -58,7 +92,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	[self setHighlighted:YES animated:NO];
 	
-	if (CGRectContainsPoint(CGRectSetZeroOrigin(self.frame), [[touches anyObject] locationInView:self])) {
+	if (CGRectContainsPoint(self.bounds, [[touches anyObject] locationInView:self])) {
 		[self.collectionView selectItemAtIndexPath:self.indexPath animated:YES scrollPosition:SSCollectionViewScrollPositionNone];
 	}
 }
@@ -72,8 +106,13 @@
 
 
 - (void)layoutSubviews {
+	_backgroundView.frame = self.bounds;
+	_selectedBackgroundView.frame = self.bounds;
+	
 	if (_style == SSCollectionViewItemStyleImage) {
-		_imageView.frame = CGRectSetZeroOrigin(self.frame);
+		_imageView.frame = self.bounds;
+	} else if (_style == SSCollectionViewItemStyleDefault) {
+		_textLabel.frame = self.bounds;
 	}
 }
 
@@ -86,9 +125,11 @@
 		_reuseIdentifier = [aReuseIdentifier copy];
 		
 		if (_style != SSCollectionViewItemStyleBlank) {
-			_detailTextLabel = [[SSLabel alloc] initWithFrame:CGRectZero];
-			_detailTextLabel.textAlignment = UITextAlignmentCenter;
-			[self addSubview:_detailTextLabel];
+			if (_style == SSCollectionViewItemStyleSubtitle) {
+				_detailTextLabel = [[SSLabel alloc] initWithFrame:CGRectZero];
+				_detailTextLabel.textAlignment = UITextAlignmentCenter;
+				[self addSubview:_detailTextLabel];
+			}
 			
 			_textLabel = [[SSLabel alloc] initWithFrame:CGRectZero];
 			_textLabel.textAlignment = UITextAlignmentCenter;
@@ -111,22 +152,41 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	_selected = selected;
 	
-	[[self subviews] enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
-		if ([object respondsToSelector:@selector(setSelected:)]) {
-			[(UIControl *)object setSelected:selected];
+	void (^changes)(void) = ^{
+		for (UIView *view in [self subviews]) {
+			if ([view respondsToSelector:@selector(setSelected:)]) {
+				[(UIControl *)view setSelected:_selected];
+			}
 		}
-	}];
+		
+		_backgroundView.hidden = _selected && _selectedBackgroundView;
+		_selectedBackgroundView.hidden = !_selected;
+	};
+	
+	if (animated) {
+		[UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:changes completion:nil];
+	} else {
+		changes();
+	}
 }
 
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
 	_highlighted = highlighted;
 	
-	[[self subviews] enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
-		if ([object respondsToSelector:@selector(setHighlighted:)]) {
-			[(UIControl *)object setHighlighted:highlighted];
+	void (^changes)(void) = ^{
+		for (UIView *view in [self subviews]) {
+			if ([view respondsToSelector:@selector(setHighlighted:)]) {
+				[(UIControl *)view setHighlighted:_highlighted];
+			}
 		}
-	}];
+	};
+	
+	if (animated) {
+		[UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:changes completion:nil];
+	} else {
+		changes();
+	}
 }
 
 

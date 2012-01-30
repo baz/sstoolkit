@@ -8,29 +8,34 @@
 
 #import "SSLineView.h"
 
+@interface SSLineView ()
+- (void)_initialize;
+@end
+
 @implementation SSLineView
 
 @synthesize lineColor = _lineColor;
+@synthesize insetColor = _insetColor;
+@synthesize dashPhase = _dashPhase;
+@synthesize dashLengths = _dashLengths;
 
 - (void)setLineColor:(UIColor *)lineColor {
+	[lineColor retain];
 	[_lineColor release];
-	_lineColor = [lineColor retain];
+	_lineColor = lineColor;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize insetColor = _insetColor;
 
 - (void)setInsetColor:(UIColor *)insetColor {
+	[insetColor retain];
 	[_insetColor release];
-	_insetColor = [insetColor retain];
+	_insetColor = insetColor;
 	
 	[self setNeedsDisplay];
 }
 
-
-@synthesize dashPhase = _dashPhase;
 
 - (void)setDashPhase:(CGFloat)dashPhase {
 	_dashPhase = dashPhase;
@@ -39,10 +44,8 @@
 }
 
 
-@synthesize dashLengths = _dashLengths;
-
 - (void)setDashLengths:(NSArray *)dashLengths {
-	[_dashLengths release];
+	[_dashLengths autorelease];
 	_dashLengths = [dashLengths copy];
 	
 	[self setNeedsDisplay];
@@ -61,14 +64,16 @@
 
 #pragma mark - UIView
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	if ((self = [super initWithCoder:aDecoder])) {
+		[self _initialize];
+	}
+	return self;
+}
+
 - (id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		self.backgroundColor = [UIColor clearColor];
-		self.opaque = NO;
-		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		
-		self.lineColor = [UIColor grayColor];
-		self.insetColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
+		[self _initialize];
 	}
 	return self;
 }
@@ -104,6 +109,18 @@
 	CGContextMoveToPoint(context, 0.0f, 0.0f);
 	CGContextAddLineToPoint(context, rect.size.width, 0.0f);
 	CGContextStrokePath(context);
+}
+
+
+#pragma mark - Private
+
+- (void)_initialize {
+	self.backgroundColor = [UIColor clearColor];
+	self.opaque = NO;
+	self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	
+	self.lineColor = [UIColor grayColor];
+	self.insetColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
 }
 
 @end

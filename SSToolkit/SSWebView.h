@@ -16,23 +16,7 @@
 
  Things of interest are the SSWebView properties and the extra `delegate` methods.
  */
-@interface SSWebView : UIView <UIWebViewDelegate> {
-
-@private
-	NSUInteger _requestCount;
-
-@private
-
-	id<SSWebViewDelegate> _delegate;
-
-	UIWebView *_webView;
-	NSURLRequest *_lastRequest;
-	BOOL _loadingPage;
-	BOOL _shadowsHidden;
-	BOOL _consoleEnabled;
-
-	BOOL _testedDOM;
-}
+@interface SSWebView : UIView <UIWebViewDelegate>
 
 ///---------------------------------
 /// @name Controlling the Appearance
@@ -48,6 +32,7 @@
  */
 @property (nonatomic, assign) BOOL shadowsHidden;
 
+
 ///---------------------------
 /// @name Setting the Delegate
 ///---------------------------
@@ -58,6 +43,7 @@
  The `delegate` is sent messages when content is loading.
  */
 @property (nonatomic, assign) id<SSWebViewDelegate> delegate;
+
 
 ///----------------------
 /// @name Loading Content
@@ -88,10 +74,10 @@
 /**
  Connects to a given URL by initiating an asynchronous client request.
  
- @param aRequest A URL request identifying the location of the content to load.
- 
  To stop this load, use the stopLoading method. To see whether the receiver is done loading the content, use the loading
  property.
+ 
+ @param aRequest A URL request identifying the location of the content to load.
  
  @see request
  @see stopLoading
@@ -103,9 +89,9 @@
 /**
  Sets the main page content.
  
- @param string The content for the main page.
+ The baseURL is set to `http://localhost`.
  
- The baseURL is set to `http://localhost`
+ @param string The content for the main page.
  
  @see loadHTMLString:baseURL:
  */
@@ -114,10 +100,10 @@
 /**
  Connects to a given URL by initiating an asynchronous client request.
  
- @param aURL A URL identifying the location of the content to load.
- 
  To stop this load, use the stopLoading method. To see whether the receiver is done loading the content, use the loading
  property.
+ 
+ @param aURL A URL identifying the location of the content to load.
  
  @see loadURLString:
  @see loadRequest:
@@ -131,10 +117,10 @@
 /**
  Connects to a given URL by initiating an asynchronous client request.
  
- @param string A string containing a URL identifying the location of the content to load.
- 
  To stop this load, use the stopLoading method. To see whether the receiver is done loading the content, use the loading
  property.
+ 
+ @param string A string containing a URL identifying the location of the content to load.
  
  @see loadURL:
  @see loadRequest:
@@ -216,6 +202,7 @@
  */
 - (void)goForward;
 
+
 ///-------------------------------------
 /// @name Setting Web Content Properties
 ///-------------------------------------
@@ -235,16 +222,13 @@
  */
 @property (nonatomic, retain, readonly) UIScrollView *scrollView;
 
+
 ///-------------------------
 /// @name Running JavaScript
 ///-------------------------
 
 /**
  Returns the result of running a script.
- 
- @param script The script to run.
- 
- @return The result of running script or `nil` if it fails.
  
  JavaScript execution time is limited to 10 seconds for each top-level entry point. If your script executes for more
  than 10 seconds, the web view stops executing the script. This is likely to occur at a random place in your code, so
@@ -253,8 +237,13 @@
  
  JavaScript allocations are also limited to 10 MB. The web view raises an exception if you exceed this limit on the
  total memory allocation for JavaScript.
+ 
+ @param script The script to run.
+ 
+ @return The result of running script or `nil` if it fails.
  */
 - (NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;
+
 
 ///-----------------------------------
 /// @name Using the JavaScript Console
@@ -270,6 +259,7 @@
  */
 @property (nonatomic, assign) BOOL consoleEnabled;
 
+
 ///------------------------------
 /// @name Detecting Types of Data
 ///------------------------------
@@ -282,6 +272,7 @@
  responsible for handling the URL type and passes it the URL.
  */
 @property (nonatomic, assign) UIDataDetectorTypes dataDetectorTypes;
+
 
 ///------------------------------
 /// @name Managing Media Playback
@@ -301,6 +292,7 @@
  */
 @property (nonatomic, assign) BOOL mediaPlaybackRequiresUserAction;
 
+
 ///--------------------------------
 /// @name Interacting with Controls
 ///--------------------------------
@@ -317,6 +309,7 @@
  Using Javascript to this doesn't always work as expected. This method will correctly remove the text selection.
  */
 - (void)removeTextSelection;
+
 
 ///----------------------
 /// @name Resetting State
@@ -381,6 +374,7 @@
  @see webViewDidFinishLoad:
  */
 - (void)webViewDidFinishLoadingPage:(SSWebView *)aWebView;
+
 
 ///----------------------
 /// @name Loading Content
