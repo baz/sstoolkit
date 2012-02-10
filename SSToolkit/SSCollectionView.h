@@ -548,6 +548,21 @@ typedef enum {
 @optional
 
 /**
+ Asks the delegate for the amount of inter-item spacing in a row.
+ 
+ @param aCollectionView The collection view object requesting this information.
+ 
+ @param section The section the item is located in.
+ 
+ @param proposedSpacing The spacing that the collection view has calculated is the ideal amount.
+ 
+ @return The alternate item row inter-item spacing.
+ */
+- (CGFloat)collectionView:(SSCollectionView *)aCollectionView itemRowSpacingForSection:(NSUInteger)section proposedSpacing:(CGFloat)proposedSpacing;
+
+@optional
+
+/**
  Tells the delegate the collection view is about to draw an item for a particular index path.
  
  A collection view sends this message to its `delegate` just before it uses item to draw a portion of a row, thereby

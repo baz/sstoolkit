@@ -636,7 +636,12 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 - (CGFloat)_itemSpacingForSection:(NSUInteger)section {
 	CGSize itemSize = [self _itemSizeForSection:section];
 	NSUInteger itemsPerRow = [self _numberOfItemsPerRowForSection:section];
-	return roundf((self.frame.size.width - (itemSize.width * (CGFloat)itemsPerRow)) / (itemsPerRow + 1));
+	CGFloat spacing = roundf((self.frame.size.width - (itemSize.width * (CGFloat)itemsPerRow)) / (itemsPerRow + 1));
+	if ([_delegate respondsToSelector:@selector(collectionView:itemRowSpacingForSection:proposedSpacing:)]) {
+		spacing = [_delegate collectionView:self itemRowSpacingForSection:section proposedSpacing:spacing];
+	}
+
+	return spacing;
 }
 
 
