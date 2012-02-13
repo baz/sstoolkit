@@ -452,6 +452,10 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 
 
 - (void)deleteSections:(NSIndexSet *)sections withItemAnimation:(SSCollectionViewItemAnimation)animation {
+	// Clear cached number of items in the deleted sections because to avoid an out of bounds crash when inserting a new section in place of the deleted one
+	[sections enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+		[self _setSectionInfoItem:nil forKey:kSSCollectionViewSectionNumberOfItemsKey section:index];
+	}];
 	[_tableView deleteSections:sections withRowAnimation:(UITableViewRowAnimation)animation];
 }
 
@@ -660,7 +664,7 @@ static NSString *kSSCollectionViewSectionItemSizeKey = @"SSCollectionViewSection
 	NSUInteger startIndex = itemsPerRow * row;
 	NSUInteger endIndex = (NSUInteger)fmin(totalItems, startIndex + itemsPerRow);
 	
-	NSMutableArray *items = [[[NSMutableArray alloc] initWithCapacity:endIndex - startIndex] autorelease];
+	NSMutableArray *items = [[[NSMutableArray alloc] initWithCapacity:abs(endIndex - startIndex)] autorelease];
 	
 	for (NSUInteger i = startIndex; i < endIndex; i++) {
 		NSIndexPath *itemIndexPath = [NSIndexPath indexPathForRow:i inSection:rowIndexPath.section];
